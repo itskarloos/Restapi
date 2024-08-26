@@ -34,7 +34,6 @@ export const POST = async (request: Request) => {
 export const PATCH = async (request : Request) => {
   try{
     const body = await request.json();
-    
     const {userId,newUserName} = body;
     await connect();
 
@@ -49,11 +48,10 @@ export const PATCH = async (request : Request) => {
     const updateUser = await User.findOneAndUpdate({
       _id: new ObjectId(userId)
     },
-    {
-      $set: {
+     {
         Username: newUserName
-      }
-    },
+      },
+    
     {
       new: true
     
