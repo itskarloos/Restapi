@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import User from "@/lib/models/users";
 import connect from "@/lib/db";
-import {Types} from "mongoose"
+import { Types } from "mongoose"
 
 
 
@@ -31,40 +31,40 @@ export const POST = async (request: Request) => {
 
 
 
-export const PATCH = async (request : Request) => {
-  try{
+export const PATCH = async (request: Request) => {
+  try {
     const body = await request.json();
-    const {userId,newUserName} = body;
+    const { userId, newUserName } = body;
     await connect();
 
-    if(!userId || !newUserName){
-      return new NextResponse(JSON.stringify({message: "Invalid Request"}), {status: 400})
+    if (!userId || !newUserName) {
+      return new NextResponse(JSON.stringify({ message: "Invalid Request" }), { status: 400 })
     }
 
-    if(!Types.ObjectId.isValid(userId)){
-      return new NextResponse(JSON.stringify({message: "Invalid User Id"}),{status:400})
+    if (!Types.ObjectId.isValid(userId)) {
+      return new NextResponse(JSON.stringify({ message: "Invalid User Id" }), { status: 400 })
 
     }
     const updateUser = await User.findOneAndUpdate({
       _id: new ObjectId(userId)
     },
-     {
+      {
         Username: newUserName
       },
-    
-    {
-      new: true
-    
-    })
+
+      {
+        new: true
+
+      })
 
 
-    if(!updateUser){
-      return new NextResponse(JSON.stringify({message: "User not updated"}),{status: 404})
+    if (!updateUser) {
+      return new NextResponse(JSON.stringify({ message: "User not updated" }), { status: 404 })
 
     }
-    return new NextResponse(JSON.stringify({message:"User Updated"}),{status:200})
+    return new NextResponse(JSON.stringify({ message: "User Updated" }), { status: 200 })
   }
-  catch(error: any){
+  catch (error: any) {
     return new NextResponse("Error: " + error.message, { status: 500 });
   }
 }
