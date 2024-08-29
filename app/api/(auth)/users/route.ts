@@ -116,7 +116,7 @@ export const DELETE = async (request: Request) => {
       return new NextResponse(JSON.stringify({ message: "Invalid Request" }), { status: 400 })
     }
     await connect();
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const deletedUser = await User.findByIdAndDelete(new Types.ObjectId(userId));
     if (!deletedUser) {
       return new NextResponse(JSON.stringify({ message: "User not deleted" }), { status: 404 })
     }
