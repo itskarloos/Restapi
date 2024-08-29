@@ -122,7 +122,7 @@ export const DELETE = async (request: Request) => {
     }
     return new NextResponse(JSON.stringify({ message: "User Deleted" }), { status: 200 });
   }
-  catch(error: any) { 
+  catch (error: any) {
     return new NextResponse("Error: " + error.message, { status: 500 });
   }
 }
