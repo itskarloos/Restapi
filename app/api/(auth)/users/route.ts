@@ -68,3 +68,42 @@ export const PATCH = async (request: Request) => {
     return new NextResponse("Error: " + error.message, { status: 500 });
   }
 }
+
+export const PUT = async (request: Request) => {
+  try {
+    const body = await request.json();
+    const { userId, newUserName, newEmail, newAge } = body;  // Example of more user fields
+    await connect();
+
+    if (!userId || !newUserName || !newEmail || !newAge) {  // Ensure all fields are included
+      return new NextResponse(JSON.stringify({ message: "Invalid Request" }), { status: 400 });
+    }
+
+    if (!Types.ObjectId.isValid(userId)) {
+      return new NextResponse(JSON.stringify({ message: "Invalid User Id" }), { status: 400 });
+    }
+
+    // Find and replace the user document entirely
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      {
+        Username: newUserName,
+        Email: newEmail,
+        Age: newAge,
+      },
+      {
+        new: true,  // Return the updated document
+        overwrite: true,  // Replace the entire document
+      }
+    );
+
+    if (!updatedUser) {
+      return new NextResponse(JSON.stringify({ message: "User not updated" }), { status: 404 });
+    }
+
+    return new NextResponse(JSON.stringify({ message: "User Updated" }), { status: 200 });
+  } catch (error: any) {
+    return new NextResponse("Error: " + error.message, { status: 500 });
+  }
+};
+
