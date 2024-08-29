@@ -107,3 +107,23 @@ export const PUT = async (request: Request) => {
   }
 };
 
+
+export const DELETE = async (request: Request) => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    if (!userId) {
+      return new NextResponse(JSON.stringify({ message: "Invalid Request" }), { status: 400 })
+    }
+    await connect();
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return new NextResponse(JSON.stringify({ message: "User not deleted" }), { status: 404 })
+    }
+    return new NextResponse(JSON.stringify({ message: "User Deleted" }), { status: 200 });
+  }
+  catch(error: any) { 
+    return new NextResponse("Error: " + error.message, { status: 500 });
+  }
+}
+
